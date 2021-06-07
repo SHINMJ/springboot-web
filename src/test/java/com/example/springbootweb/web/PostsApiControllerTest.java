@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -41,8 +38,8 @@ class PostsApiControllerTest {
         postsRepository.deleteAll();
     }
 
-    private String getUrl() {
-        return "http://localhost:" + port + "/api/v1/posts";
+    private String getUrl(Long id) {
+        return "http://localhost:" + port + "/api/v1/posts"+(id > -1L?"/"+id:"");
     }
 
     @Test
@@ -56,7 +53,7 @@ class PostsApiControllerTest {
                 .author("violet")
                 .build();
 
-        String url = getUrl();
+        String url = getUrl(-1L);
 
         //when
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, dto, Long.class);
@@ -89,7 +86,7 @@ class PostsApiControllerTest {
                 .contents(expectedContents)
                 .author(expectedAuthor).build();
 
-        String url = getUrl()+"/"+id;
+        String url = getUrl(id);
         HttpEntity<PostsUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
         //when
@@ -103,6 +100,36 @@ class PostsApiControllerTest {
         assertThat(postsList.get(0).getTitle()).isEqualTo(title);
         assertThat(postsList.get(0).getContent()).isEqualTo(expectedContents);
         assertThat(postsList.get(0).getAuthor()).isEqualTo(expectedAuthor);
+    }
+
+    @Test
+    public void Posts_한건조회한다() {
+        //given
+        String title = "title";
+        String content = "contents";
+        String author = "violet";
+
+        Posts savedPosts = postsRepository.save(Posts.builder()
+                .title(title)
+                .content(content)
+                .author(author)
+                .build()
+        );
+
+        Long id = savedPosts.getId();
+
+        String url = getUrl(id);
+
+        //when
+        ResponseEntity<PostsResponseDto> responseEntity = restTemplate.getForEntity(url, PostsResponseDto.class);
+//        PostsResponseDto posts = restTemplate.getForObject(url, PostsResponseDto.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        PostsResponseDto posts = responseEntity.getBody();
+        assertThat(posts.getTitle()).isEqualTo(title);
+        assertThat(posts.getContent()).isEqualTo(content);
+        assertThat(posts.getAuthor()).isEqualTo(author);
     }
 
 }
