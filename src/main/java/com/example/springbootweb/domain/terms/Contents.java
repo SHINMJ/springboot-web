@@ -19,16 +19,16 @@ public class Contents extends BaseTimeEntity {
     @Column(name = "contents_id")
     private Long id;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String contents;
 
     @Column
-    private String url;
+    private String contentsUrl;
 
     @Builder
     public Contents(String contents, String url) {
         this.contents = contents;
-        this.url = url;
+        this.contentsUrl = url;
     }
 
     public Contents updateContents(String contents) {
@@ -38,7 +38,7 @@ public class Contents extends BaseTimeEntity {
     }
 
     public Contents updateUrl(String url) {
-        this.url = url;
+        this.contentsUrl = url;
 
         return this;
     }

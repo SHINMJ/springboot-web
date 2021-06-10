@@ -1,18 +1,26 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem://localhost/~/testdb;MODE=MYSQL
-    username: sa
-    password:
-    hikari:
-      jdbc-url: jdbc:h2:mem://localhost/~/testdb;MODE=MYSQL
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  #  h2:
+#    console:
+#      enabled: true
+#      path: /h2
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem://localhost/~/testdb;MODE=MYSQL
+#    username: sa
+#    password:
+#    hikari:
+#      jdbc-url: jdbc:h2:mem://localhost/~/testdb;MODE=MYSQL
   jpa:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        dialect: org.hibernate.dialect.MySQL57Dialect
         storage_engine: innodb
+        ddl-auto: create-drop
+    hibernate:
+      ddl-auto: create-drop

@@ -1,0 +1,38 @@
+version: 3.7
+
+services:
+  database:
+    image: mysql:5.7
+    environment:
+      MYSQL_USER: msa
+      MYSQL_DATABASE: msa
+      MYSQL_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - "./database/:/var/lib/mysql"
+    ports:
+      - "3308:3306"
+    container_name: msa_mysql
+    networks:
+      - backend-network
+
+  spring-boot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: springboot-web
+    ports:
+      - "8080:8080"
+    container_name: springboot-web
+    restart: always
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://msa_mysql:3308/msa?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&useUnicode=true&characterEncoding=utf8
+      SPRING_DATASOURCE_USERNAME: msa
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - backend-network
+
+networks:
+  backend-network

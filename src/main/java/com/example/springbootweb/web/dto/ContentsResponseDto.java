@@ -16,6 +16,6 @@ public class ContentsResponseDto {
     public ContentsResponseDto(Contents contents) {
         this.id = contents.getId();
         this.contents = contents.getContents();
-        this.url = contents.getUrl();
+        this.url = contents.getContentsUrl();
     }
 }

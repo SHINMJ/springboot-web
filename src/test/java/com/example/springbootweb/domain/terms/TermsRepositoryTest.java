@@ -30,6 +30,7 @@ class TermsRepositoryTest {
     }
 
     @Test
+    @Transactional
     public void terms_목록조회() {
         //given
         for (int i = 0; i < 2; i++) {
@@ -51,6 +52,7 @@ class TermsRepositoryTest {
 
         //when
         List<Terms> termsList = termsRepository.findAll();
+        termsList.stream().forEach(System.out::println);
 
         //then
         assertThat(termsList.size()).isEqualTo(2);

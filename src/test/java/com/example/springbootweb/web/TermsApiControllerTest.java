@@ -63,8 +63,8 @@ class TermsApiControllerTest {
     public void 이용약관_등록_byContents() {
         //given
         String type = "TOS";
-        String title = "이용약관";
-        ContentsRequestDto contents = ContentsRequestDto.builder().contents("이용약관 contents").build();
+        String title = "test";
+        ContentsRequestDto contents = ContentsRequestDto.builder().contents("test contents").url("").build();
         TermsSaveRequestDto reqeustDto = TermsSaveRequestDto.builder()
                 .type(type)
                 .title(title)
@@ -92,7 +92,7 @@ class TermsApiControllerTest {
                 type = "PP";
             }
             String title = "이용약관 " + i;
-            Contents contents = Contents.builder().contents("이용약관 contents : " + i).build();
+            Contents contents = Contents.builder().contents("이용약관 contents : " + i).url("").build();
 
             Long id = termsRepository.save(Terms.builder()
                     .type(type)
@@ -109,7 +109,22 @@ class TermsApiControllerTest {
     @Test
     public void 목록_조회() {
         //given
-        saveTerms(10);
+        for (int i = 1; i <= 10; i++) {
+            String title = "title_"+i;
+            String contentStr = "contents " + i;
+            String type = "TOS";
+            if(i % 2 == 0){
+                type = "PP";
+            }
+            Contents contents = Contents.builder()
+                    .contents(contentStr).url("").build();
+
+            termsRepository.save(Terms.builder()
+                    .type(type)
+                    .title(title)
+                    .contents(contents)
+                    .build());
+        }
 
         String url = getUrl();
 
@@ -118,14 +133,33 @@ class TermsApiControllerTest {
 
         //then
         List<TermsResponseDto> list = responseEntity.getBody();
+        assertThat(list.size()).isGreaterThan(0);
+        System.out.println(list.size());
         list.stream().forEach(t -> System.out.println("in test : "+t.toString()));
 
     }
 
     @Test
+//    @Transactional
     public void 한건_조회() {
         //given
-        saveTerms(10);
+        //given
+        for (int i = 1; i <= 10; i++) {
+            String title = "title_"+i;
+            String contentStr = "contents " + i;
+            String type = "TOS";
+            if(i % 2 == 0){
+                type = "PP";
+            }
+            Contents contents = Contents.builder()
+                    .contents(contentStr).url("").build();
+
+            termsRepository.save(Terms.builder()
+                    .type(type)
+                    .title(title)
+                    .contents(contents)
+                    .build());
+        }
 
         String url = getUrl(1L);
 
@@ -160,7 +194,7 @@ class TermsApiControllerTest {
         Long id = termsRepository.save(Terms.builder()
                 .type("PP")
                 .title("title")
-                .contents(Contents.builder().contents("contents").build())
+                .contents(Contents.builder().contents("contents").url("").build())
                 .build()
         ).getId();
 
@@ -179,8 +213,8 @@ class TermsApiControllerTest {
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isEqualTo(id);
-        Terms resTerm = termsRepository.findById(id).get();
-        System.out.println(resTerm);
+//        Terms resTerm = termsRepository.findById(id).get();
+//        System.out.println(resTerm);
 
     }
 

@@ -23,7 +23,7 @@ public class ContentsRequestDto {
     public ContentsRequestDto (Contents contents) {
         this.id = contents.getId();
         this.contents = contents.getContents();
-        this.url = contents.getUrl();
+        this.url = contents.getContentsUrl();
     }
 
     public void setContents(String updateContents) {
