@@ -29,3 +29,4 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://msa_mysql:3306/msa?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&useUnicode=true&characterEncoding=utf8
       SPRING_DATASOURCE_USERNAME: msa
       SPRING_DATASOURCE_PASSWORD: password
+      SPRING_WEB_PORT: 8080
