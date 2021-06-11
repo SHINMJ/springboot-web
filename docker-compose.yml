@@ -11,7 +11,7 @@ services:
     volumes:
       - "./database/:/var/lib/mysql"
     ports:
-      - "3306:3306"
+      - "3307:3306"
     container_name: msa_mysql
 
   spring-boot:
@@ -20,13 +20,14 @@ services:
       dockerfile: Dockerfile
     image: springboot-web
     ports:
-      - "8080:8080"
+      - "8081:8080"
     container_name: springboot-web
     restart: always
     depends_on:
       - database
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://msa_mysql:3306/msa?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&useUnicode=true&characterEncoding=utf8
+      SPRING_DATASOURCE_URL: jdbc:mysql://msa_mysql:3307/msa?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&useUnicode=true&characterEncoding=utf8
       SPRING_DATASOURCE_USERNAME: msa
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_WEB_PORT: 8080
+      SPRING_ENVIRONMENT: dev
