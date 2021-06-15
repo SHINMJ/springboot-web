@@ -29,6 +29,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
         QContents qContents = new QContents("contents");
         return queryFactory
                 .select(fields(TermsResponseDto.class,
+                        terms.id,
                         terms.type,
                         terms.title,
                         terms.isUse,
