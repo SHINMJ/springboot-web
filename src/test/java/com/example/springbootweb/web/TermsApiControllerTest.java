@@ -12,13 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -137,6 +138,54 @@ class TermsApiControllerTest {
         System.out.println(list.size());
         list.stream().forEach(t -> System.out.println("in test : "+t.toString()));
 
+    }
+
+    @Test
+    public void 검색조건_목록_조회() {
+        //given
+        for (int i = 1; i <= 10; i++) {
+            String title = "title_"+i;
+            if(i%3 == 0){
+                title = "api test title";
+            }
+            String contentStr = "contents " + i;
+            String type = "TOS";
+            if(i % 2 == 0){
+                type = "PP";
+            }
+            Contents contents = Contents.builder()
+                    .contents(contentStr).url("").build();
+
+            termsRepository.save(Terms.builder()
+                    .type(type)
+                    .title(title)
+                    .contents(contents)
+                    .build());
+        }
+
+        String url = getUrl();
+
+        TermsRequestDto requestDto = TermsRequestDto.builder()
+                .searchType("title")
+                .value("api")
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity entity = new HttpEntity( headers);
+
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("searchType", "title")
+                .queryParam("value", "api")
+                .build();
+
+        //when
+        ResponseEntity<List<TermsResponseDto>> responseEntity = restTemplate.exchange(uriComponents.toUriString(),HttpMethod.GET, entity, new ParameterizedTypeReference<List<TermsResponseDto>>() {});
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(3);
     }
 
     @Test

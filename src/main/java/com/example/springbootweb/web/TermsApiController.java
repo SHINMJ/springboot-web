@@ -1,6 +1,7 @@
 package com.example.springbootweb.web;
 
 import com.example.springbootweb.service.TermsService;
+import com.example.springbootweb.web.dto.TermsRequestDto;
 import com.example.springbootweb.web.dto.TermsResponseDto;
 import com.example.springbootweb.web.dto.TermsSaveRequestDto;
 import com.example.springbootweb.web.dto.TermsUpdateRequestDto;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,8 +24,15 @@ public class TermsApiController {
     }
 
     @GetMapping("/api/v1/terms")
-    public List<TermsResponseDto> findAll() {
-        return termsService.findAllByIsUseTrue();
+    public List<TermsResponseDto> findAll(@RequestParam(name = "searchType", required = false) String searchType, @RequestParam(name = "value", required = false) String value) {
+        System.out.println("=========== reuqestDto : " + searchType+", " + value);
+
+        Optional<TermsRequestDto> requestDto = Optional.ofNullable(TermsRequestDto.builder()
+                .searchType(searchType)
+                .value(value)
+                .build());
+
+        return termsService.findAllByIsUseTrue(requestDto);
     }
 
     @GetMapping("/api/v1/terms/{id}")

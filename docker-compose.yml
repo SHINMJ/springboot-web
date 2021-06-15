@@ -8,6 +8,7 @@ services:
       MYSQL_DATABASE: msa
       MYSQL_PASSWORD: password
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_HOST: "%"
     volumes:
       - "./database/:/var/lib/mysql"
     ports:
@@ -26,7 +27,7 @@ services:
     depends_on:
       - database
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://msa_mysql:3307/msa?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&useUnicode=true&characterEncoding=utf8
+      SPRING_DATASOURCE_URL: jdbc:mysql://msa_mysql:3306/msa?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&useUnicode=true&characterEncoding=utf8
       SPRING_DATASOURCE_USERNAME: msa
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_WEB_PORT: 8080

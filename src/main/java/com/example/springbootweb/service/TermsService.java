@@ -2,6 +2,7 @@ package com.example.springbootweb.service;
 
 import com.example.springbootweb.domain.terms.Terms;
 import com.example.springbootweb.domain.terms.TermsRepository;
+import com.example.springbootweb.web.dto.TermsRequestDto;
 import com.example.springbootweb.web.dto.TermsResponseDto;
 import com.example.springbootweb.web.dto.TermsSaveRequestDto;
 import com.example.springbootweb.web.dto.TermsUpdateRequestDto;
@@ -20,7 +21,11 @@ public class TermsService {
     private final TermsRepository termsRepository;
 
     @Transactional(readOnly = true)
-    public List<TermsResponseDto> findAllByIsUseTrue() {
+    public List<TermsResponseDto> findAllByIsUseTrue(Optional<TermsRequestDto> requestDto) {
+        System.out.println("=== service "+ requestDto.isPresent());
+        if(requestDto.isPresent()){
+            System.out.println(requestDto.get().toString());
+        }
         List<Terms> list = termsRepository.findAllByIsUseTrueOrderByRegistDateDesc();
 //        list.stream().forEach(terms -> System.out.println("in service : " + terms.toString()));
         return list.stream().map(terms -> new TermsResponseDto(terms)).collect(Collectors.toList());
