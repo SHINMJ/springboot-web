@@ -4,10 +4,9 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
+@Data
 @NoArgsConstructor
-@ToString
-public class TermsRequestDto implements Serializable {
+public class TermsRequestDto {
     private String searchType;
     private String value;
 

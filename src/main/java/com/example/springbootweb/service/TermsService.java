@@ -21,15 +21,9 @@ public class TermsService {
     private final TermsRepository termsRepository;
 
     @Transactional(readOnly = true)
-    public List<TermsResponseDto> findAllByIsUseTrue(Optional<TermsRequestDto> requestDto) {
-        System.out.println("=== service "+ requestDto.isPresent());
-        if(requestDto.isPresent()){
-            System.out.println(requestDto.get().toString());
-        }
+    public List<TermsResponseDto> findAllByIsUseTrue(TermsRequestDto requestDto) {
         List<Terms> list = termsRepository.findAllByIsUseTrueOrderByRegistDateDesc();
-//        list.stream().forEach(terms -> System.out.println("in service : " + terms.toString()));
         return list.stream().map(terms -> new TermsResponseDto(terms)).collect(Collectors.toList());
-
     }
 
     public TermsResponseDto findById(Long id) {

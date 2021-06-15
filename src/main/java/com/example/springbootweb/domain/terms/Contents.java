@@ -8,6 +8,8 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
+
 @ToString
 @Getter
 @NoArgsConstructor
@@ -24,6 +26,9 @@ public class Contents extends BaseTimeEntity {
 
     @Column
     private String contentsUrl;
+
+    @OneToOne(mappedBy = "contents", fetch = LAZY)
+    private Terms terms;
 
     @Builder
     public Contents(String contents, String url) {

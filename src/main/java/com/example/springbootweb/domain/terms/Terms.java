@@ -1,25 +1,21 @@
 package com.example.springbootweb.domain.terms;
 
 import com.example.springbootweb.domain.BaseTimeEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static javax.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
+
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @Entity
-@DynamicInsert
-@DynamicUpdate
 public class Terms extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +23,7 @@ public class Terms extends BaseTimeEntity {
     private Long id;
 
     /**
-     * @TODO
-     * 공통코드 조회
+     * @TODO 공통코드 조회
      * 현재 string
      * terms of service (TOS) = 이용약관
      * privacy policy (PP) = 개인정보 처리 방침
@@ -45,9 +40,8 @@ public class Terms extends BaseTimeEntity {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime registDate;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
-    @JoinColumn(name = "contents_id", nullable = false)
-    @LazyToOne(value=LazyToOneOption.NO_PROXY)
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "contents_id")
     private Contents contents;
 
     @Builder
@@ -81,9 +75,9 @@ public class Terms extends BaseTimeEntity {
                 ", title='" + title + '\'' +
                 ", isUse=" + isUse +
                 ", registDate=" + registDate +
-                ", contents=" + contents.toString() +
-                ", createAt="+ this.getCreatedAt()+
-                ", updateAt="+ this.getUpdatedAt()+
+//                ", contents=" + contents.toString() +
+                ", createAt=" + this.getCreatedAt() +
+                ", updateAt=" + this.getUpdatedAt() +
                 '}';
     }
 }
