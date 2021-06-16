@@ -5,6 +5,7 @@ import com.example.springbootweb.domain.terms.Terms;
 import com.example.springbootweb.domain.terms.TermsRepository;
 import com.example.springbootweb.web.dto.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponents;
@@ -37,6 +39,11 @@ class TermsApiControllerTest {
 
     @Autowired
     private TermsRepository termsRepository;
+
+    @BeforeEach
+    public void setup() {
+        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+    }
 
     @AfterEach
     public void tearDown() throws Exception {
@@ -284,6 +291,31 @@ class TermsApiControllerTest {
         //then
         Optional<Terms> terms = termsRepository.findById(id);
         assertThat(terms.isPresent()).isFalse();
+    }
+
+    @Test
+    public void 사용여부_수정() {
+        //given
+        Long id = termsRepository.save(Terms.builder()
+                .type("PP")
+                .title("title")
+                .contents(Contents.builder().contents("contents").url("").build())
+                .build()
+        ).getId();
+
+        TermsUpdateRequestDto requestDto = TermsUpdateRequestDto.builder()
+                .isUse(false)
+                .build();
+
+        String url = getUrl(id);
+        HttpEntity<TermsUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
+
+        //when
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, Long.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isEqualTo(id);
     }
 
 }

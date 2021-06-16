@@ -53,5 +53,10 @@ public class TermsApiController {
         termsService.delete(id);
     }
 
+    @PatchMapping("/api/v1/terms/{id}")
+    public Long updateUse(@PathVariable Long id, @RequestBody TermsUpdateRequestDto requestDto) {
+        return termsService.updateUse(id, requestDto);
+    }
+
 
 }

@@ -24,4 +24,9 @@ public class TermsUpdateRequestDto {
         this.contents = contents;
     }
 
+    @Builder
+    public TermsUpdateRequestDto(Boolean isUse){
+        this.isUse = isUse;
+    }
+
 }

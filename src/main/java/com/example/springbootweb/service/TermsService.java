@@ -58,4 +58,12 @@ public class TermsService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 약관이 없습니다. id="+id));
         termsRepository.delete(terms);
     }
+
+    @Transactional
+    public Long updateUse(Long id, TermsUpdateRequestDto requestDto) {
+        Terms terms = termsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 약관이 없습니다. id="+id));
+        terms.updateUse(requestDto.getIsUse());
+        return id;
+    }
 }
