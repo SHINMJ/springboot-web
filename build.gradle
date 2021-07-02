@@ -19,13 +19,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     // querydsl
     implementation 'com.querydsl:querydsl-jpa'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
     implementation 'com.h2database:h2'
     implementation 'mysql:mysql-connector-java'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
-    //restTemplate 에서 patch 사용시 에러나서 추가
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
+    //restTemplate 사용시...
+//    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
 
     implementation 'org.projectlombok:lombok:1.18.18'
     annotationProcessor("org.projectlombok:lombok")
@@ -33,6 +36,9 @@ dependencies {
     testAnnotationProcessor('org.projectlombok:lombok')
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //query 파라미터 로그 남기기 위한 라이브러리
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
 }
 
 test {

@@ -4,21 +4,10 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2
-#  datasource:
-#    driver-class-name: org.h2.Driver
-#    url: jdbc:h2:mem://localhost/~/testdb;MODE=MYSQL
-#    username: sa
-#    password:
-#    hikari:
-#      jdbc-url: jdbc:h2:mem://localhost/~/testdb;MODE=MYSQL
   jpa:
-    show-sql: true
     properties:
       hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.MySQL57Dialect
         storage_engine: innodb
         ddl-auto: create-drop
@@ -26,3 +15,6 @@ spring:
       ddl-auto: update
 server:
   port: ${SPRING_WEB_PORT}
+
+logging.level:
+  org.hibernate.SQL: debug
